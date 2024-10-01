@@ -1,0 +1,173 @@
+classdef GraphUtility
+    methods(Static)
+
+        
+        %% Visualize Math Expression
+        function visualizeExpression(expression, variables, name)
+            % Placeholder for visualizing a symbolic or numerical expression
+            disp(['Visualizing expression for: ', name]);
+            % Future implementation for symbolic/numerical plotting
+        end
+        
+        %% Visualize Wavefunction Data
+        function visualizeWavefunction(wavefunctionData, dimension, name)
+            % Check the dimension and plot accordingly
+            switch dimension
+                case 1
+                    % Plot 1D wavefunction
+                    figure;
+                    plot(wavefunctionData);
+                    title([name, ' - 1D Wavefunction']);
+                    xlabel('Position');
+                    ylabel('Wavefunction Value');
+                case 2
+                    % Plot 2D wavefunction
+                    figure;
+                    imagesc(wavefunctionData);
+                    title([name, ' - 2D Wavefunction']);
+                    xlabel('X Position');
+                    ylabel('Y Position');
+                    colorbar;
+                case 3
+                    % Plot 3D wavefunction (surface plot)
+                    [X, Y, Z] = meshgrid(1:size(wavefunctionData, 1), 1:size(wavefunctionData, 2), 1:size(wavefunctionData, 3));
+                    figure;
+                    slice(X, Y, Z, wavefunctionData, [], [], 1:size(wavefunctionData, 3));
+                    title([name, ' - 3D Wavefunction']);
+                    xlabel('X Position');
+                    ylabel('Y Position');
+                    zlabel('Z Position');
+                    colorbar;
+                otherwise
+                    disp('Unsupported wavefunction dimensionality.');
+            end
+        end
+        
+                %% Visualize Spacetime Metric
+        function visualizeMetric(spacetimeMetric, name, options)
+            % Visualize specific spacetime metric components, including animation
+            
+            if nargin < 3
+                options = struct();  % Default empty options
+            end
+            
+            % Check if metric is numeric or symbolic
+            if isnumeric(spacetimeMetric)
+                % Visualize the metric as a heatmap for numeric data
+                figure;
+                imagesc(spacetimeMetric);  % Heatmap of the metric tensor
+                colorbar;
+                title([name, ' - Spacetime Metric (Heatmap)']);
+                xlabel('Metric Component Index');
+                ylabel('Metric Component Index');
+            elseif isa(spacetimeMetric, 'sym')
+                % For symbolic metrics, visualize specific components
+                disp('Symbolic metric detected.');
+                
+                % Plot custom components if specified in options
+                if isfield(options, 'components')
+                    componentList = options.components;
+                else
+                    componentList = {1, 1};  % Default component (g_{00})
+                end
+                
+                for i = 1:size(componentList, 1)
+                    component = componentList{i};
+                    figure;
+                    fsurf(spacetimeMetric(component(1), component(2)));  % Plot specified component
+                    title([name, ' - Symbolic Metric Component (g_{', num2str(component(1)), num2str(component(2)), '})']);
+                    xlabel('x'); ylabel('y');  % Placeholder axis labels (adjust as needed)
+                end
+                
+                % If animation is requested, handle animation
+                if isfield(options, 'animate') && options.animate
+                    % Assume animation is time-dependent (expand as needed)
+                    disp('Animating symbolic metric...');
+                    GraphUtility.animateMetric(spacetimeMetric, name);
+                end
+            else
+                error('Unsupported spacetime metric data type.');
+            end
+        end
+        
+        %% Animate Spacetime Metric (for time-dependent metrics)
+        function animateMetric(spacetimeMetric, name)
+            % Assume the metric is time-dependent (e.g., g_{00}(t))
+            
+            syms t;  % Time symbol
+            
+            % Determine the time range for the animation (adjust as needed)
+            timeRange = 0:0.1:10;
+            
+            % Create figure for animation
+            fig = figure;
+            ax = axes(fig);
+            hold on;
+            grid on;
+            
+            % Placeholder for plotting evolution of g_{00}(t) over time
+            for i = 1:length(timeRange)
+                timeVal = timeRange(i);
+                currentMetric = subs(spacetimeMetric, t, timeVal);  % Substitute time into metric
+                
+                % Plot g_{00}(t) as an example (expand as needed)
+                plot(ax, double(currentMetric(1,1)), timeVal, 'bo');
+                title([name, ' - Evolving Metric Component (g_{00}(t))']);
+                xlabel('g_{00}'); ylabel('Time');
+                pause(0.1);  % Pause to create animation effect
+            end
+        end
+        
+        %% Visualize Quantum Field
+        function visualizeQuantumField(quantumField, dimension, name)
+            if isempty(quantumField)
+                disp('No quantum field data to visualize.');
+                return;
+            end
+            
+            % Check if the quantum field is numeric or symbolic
+            if isnumeric(quantumField)
+                % Visualize the quantum field as a plot, heatmap, or 3D surface depending on dimension
+                switch dimension
+                    case 1
+                        figure;
+                        plot(quantumField);
+                        title([name, ' - 1D Quantum Field']);
+                        xlabel('Position');
+                        ylabel('Field Value');
+                    case 2
+                        figure;
+                        imagesc(quantumField);  % Heatmap for 2D quantum field
+                        title([name, ' - 2D Quantum Field']);
+                        xlabel('X Position');
+                        ylabel('Y Position');
+                        colorbar;
+                    case 3
+                        [X, Y, Z] = meshgrid(1:size(quantumField, 1), 1:size(quantumField, 2), 1:size(quantumField, 3));
+                        figure;
+                        slice(X, Y, Z, quantumField, [], [], 1:size(quantumField, 3));
+                        title([name, ' - 3D Quantum Field']);
+                        xlabel('X Position');
+                        ylabel('Y Position');
+                        zlabel('Z Position');
+                        colorbar;
+                    otherwise
+                        disp('Unsupported quantum field dimensionality.');
+                end
+            elseif isa(quantumField, 'sym')
+                % For symbolic fields, plot specific components
+                disp('Symbolic quantum field detected. Plotting...');
+                % Example: plot a symbolic field component
+                figure;
+                fsurf(quantumField);  % Plot the symbolic field
+                title([name, ' - Symbolic Quantum Field']);
+                xlabel('x'); ylabel('y');  % Placeholder axes
+            else
+                error('Unsupported quantum field data type.');
+            end
+        end        
+        
+
+    end
+    
+end
