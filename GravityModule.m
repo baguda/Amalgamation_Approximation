@@ -43,8 +43,23 @@ classdef GravityModule < WavefunctionModule
         %% Override printOverview to include gravity-specific properties
         function printOverview(obj)
             % Call superclass method to print shared and wavefunction-specific properties
-            printOverview@WavefunctionModule(obj);
-            
+            printOverview@Module(obj);
+
+            % Check if metadata exists, then print
+            if isstruct(obj.metadata)
+                disp('Metadata:');
+                fields = fieldnames(obj.metadata);
+                for i = 1:numel(fields)
+                    fieldValue = obj.metadata.(fields{i});
+                    if isnumeric(fieldValue)
+                        fieldValue = num2str(fieldValue);  % Convert numeric values to strings if needed
+                    end
+                    disp([fields{i}, ': ', fieldValue]);
+                end
+            else
+                disp('No metadata available.');
+            end
+
             % Print gravity-specific properties
             disp(['Gravitational Constant (G): ', num2str(obj.gravitationalConstant)]);
             disp(['Spacetime Metric: ', mat2str(obj.spacetimeMetric)]);
@@ -72,5 +87,7 @@ classdef GravityModule < WavefunctionModule
             % Call GraphUtility for custom visualization (expand later)
             GraphUtility.visualizeMetric(obj.spacetimeMetric, obj.name);
         end
+
+
     end
 end

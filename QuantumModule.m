@@ -4,6 +4,9 @@ classdef QuantumModule < WavefunctionModule
         potentialFunction   % Potential function for the quantum system (numeric or symbolic)
         quantumOperators    % Operators acting on the quantum field (e.g., creation/annihilation)
         particleType        % Type of particle (e.g., fermion, boson)
+        particleMass
+        charge
+        
     end
     
     methods
@@ -41,16 +44,31 @@ classdef QuantumModule < WavefunctionModule
         end
         
         %% Override printOverview to include quantum-specific properties
-        function printOverview(obj)
-            % Call superclass method to print shared and wavefunction-specific properties
-            printOverview@WavefunctionModule(obj);
-            
-            % Print quantum-specific properties
-            disp(['Quantum Field: ', mat2str(obj.quantumField)]);
+       function printOverview(obj)
+        % Call superclass method to print shared and wavefunction-specific properties
+        printOverview@WavefunctionModule(obj);
+
+        % Print quantum-specific properties
+        disp(['Particle Mass: ', num2str(obj.particleMass)]);
+        disp(['Charge: ', num2str(obj.charge)]);
+
+        % Check if potentialFunction is a function handle
+        if isa(obj.potentialFunction, 'function_handle')
+            disp('Potential Function: Defined as a function handle');
+        else
             disp(['Potential Function: ', mat2str(obj.potentialFunction)]);
-            disp(['Quantum Operators: ', mat2str(obj.quantumOperators)]);
-            disp(['Particle Type: ', obj.particleType]);
         end
+
+        % Print quantum operators
+        if ~isempty(obj.quantumOperators)
+            disp(['Quantum Operators: ', strjoin(obj.quantumOperators, ', ')]);
+        else
+            disp('Quantum Operators: Not defined');
+        end
+
+        % Print particle type
+        disp(['Particle Type: ', obj.particleType]);
+    end
 
         %% Evaluate Quantum Field at a Point
         function value = evaluateQuantumField(obj, coords)

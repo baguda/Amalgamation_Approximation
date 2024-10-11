@@ -1,0 +1,44 @@
+clc
+clear
+% Define 1D gravity wavefunction (Gaussian)
+gravityWavefunction = @(x) exp(-x.^2);
+
+gravityModule = GravityModule(false);  % 'false' means we are not loading from file
+gravityModule.name = '1D Gaussian';
+gravityModule.moduleType = 'gravity';
+gravityModule.
+gravityModule
+x = linspace(-50, 50, 1000);  % Create a 1D grid
+gravityModule.wavefunctionData = gravityWavefunction(x);  % Assign wavefunction to module
+
+gravityModule.spacetimeMetric = rand(2,2);  % Placeholder metric data
+gravityModule.massDistribution = ones(size(x));  % Uniform mass distribution
+
+gravityModule.printOverview();
+
+%gravityModule.visualizeSpacetimeMetric();
+
+% Define a 1D quantum wavefunction (example: sine wave)
+x = linspace(0, 2*pi, 100);
+quantumWavefunction = @(x) sin(x);
+
+% Create a new QuantumModule instance
+quantumModule = QuantumModule(false);  % 'false' means we are not loading from file
+
+% Assign the wavefunction data (example: sine wave)
+quantumModule.wavefunctionData = quantumWavefunction(x);  % Assign wavefunction to module
+
+% Assign quantum-specific properties
+quantumModule.particleMass = 9.11e-31;  % Mass of an electron in kg
+quantumModule.charge = -1.6e-19;  % Charge of an electron in C
+quantumModule.potentialEnergy = rand(1, 100);  % Random potential energy for demonstration
+
+
+curvature = gravityModule.calculateCurvature();
+
+disp(['Calculated Curvature: ', num2str(curvature)]);
+figure;
+plot(x, gravityModule.wavefunctionData);
+title('1D Gaussian Wavefunction');
+xlabel('x');
+ylabel('Wavefunction Value');

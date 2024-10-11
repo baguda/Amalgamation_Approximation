@@ -46,15 +46,25 @@ classdef Module
         end
         
         %% Save Module
-        function saveModule(obj)
-            [file, path] = uiputfile('*.mat', 'Save Module As');
-            if isequal(file, 0)
-                disp('User canceled the save operation.');
-            else
-                save(fullfile(path, file), '-struct', 'obj');
-                disp(['Module saved as: ', fullfile(path, file)]);
-            end
-        end
+function saveModule(obj)
+    % Suggest default filename based on the 'name' property
+    if ~isempty(obj.name)
+        defaultFileName = [obj.name, '.mat'];
+    else
+        defaultFileName = 'Module.mat';  % Fallback if name is not defined
+    end
+    
+    % Use uiputfile to prompt the user to save the file, with the default name suggested
+    [file, path] = uiputfile('*.mat', 'Save Module As', defaultFileName);
+    
+    if isequal(file, 0)
+        disp('User canceled the save operation.');
+    else
+        save(fullfile(path, file), '-struct', 'obj');
+        disp(['Module saved as: ', fullfile(path, file)]);
+    end
+end
+
         
         %% Load Module
         function obj = loadModule(obj)
@@ -90,7 +100,7 @@ classdef Module
             disp(['Source: ', obj.source]);
             disp(['Version: ', obj.version]);
             disp(['Symmetry: ', obj.symmetry]);
-            disp(['Metadata: ', struct2str(obj.metadata)]);
+            %disp(['Metadata: ', struct2str(obj.metadata)]);
         end
     end
 end
